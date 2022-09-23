@@ -1,38 +1,33 @@
-'use strict';
+import { Sequelize } from 'sequelize';
+import { define } from '../db';
 
-module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('usuario', {
-      id: {
+const Usuario = define('usuario', {
+    id: {
         type: Sequelize.DataTypes.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true
-      },
-      nome: {
+    },
+    nome: {
         type: Sequelize.DataTypes.STRING(150),
         allowNull: false
-      },
-      email: {
+    },
+    email: {
         type: Sequelize.DataTypes.STRING(150),
         allowNull: false
-      },
-      senha:{
+    },
+    senha: {
         type: Sequelize.DataTypes.STRING,
         allowNull: false
-      },
-      pix: {
+    },
+    pix: {
         type: Sequelize.DataTypes.STRING(200),
         allowNull: true
-      },
-      saldo: {
+    },
+    saldo: {
         type: Sequelize.DataTypes.DECIMAL,
         allowNull: 0
-      }
-    })
-  },
+    }
+})
 
-  async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('clientes');
-  }
-};
+export default Usuario;

@@ -8,7 +8,7 @@ const server = express();
 const port = 3000;
 
 server.use(cors());
-server.use(express.json()); 
+server.use(express.json());
 
 server.get('/', (req, res) => {
     console.log('teste')
@@ -16,6 +16,6 @@ server.get('/', (req, res) => {
 })
 
 
-server.listen(port, ()=>{
-    console.log('ONLINE!');
+server.listen(port, () => {
+    console.log('ONLINE! RODANDO NA PORTA ' + port);
 })
