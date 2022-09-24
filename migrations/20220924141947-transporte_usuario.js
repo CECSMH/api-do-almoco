@@ -1,24 +1,27 @@
 'use strict';
 
 export async function up(queryInterface, Sequelize) {
-  await queryInterface.createTable('adicionais', {
+  await queryInterface.createTable('transporte_usuario', {
     id: {
       type: Sequelize.DataTypes.INTEGER,
       autoIncrement: true,
       allowNull: false,
-      primaryKey: true
-    },
-    nome: {
-      type: Sequelize.DataTypes.STRING(150),
-      allowNull: false
+      primaryKey: true,
+      unique: true
     },
     id_usuario: {
       type: Sequelize.DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      references: 'usuario',
+      referencesKey: 'id',
+      onDelete: 'CASCADE'
     },
-    preco: {
-      type: Sequelize.DataTypes.DECIMAL,
-      allowNull: true
+    id_transporte: {
+      type: Sequelize.DataTypes.INTEGER,
+      allowNull: false,
+      references: 'transporte',
+      referencesKey: 'id',
+      onDelete: 'CASCADE'
     },
     createdAt: {
       allowNull: false,
@@ -31,5 +34,5 @@ export async function up(queryInterface, Sequelize) {
   });
 }
 export async function down(queryInterface, Sequelize) {
-  await queryInterface.dropTable('adicionais');
+  await queryInterface.dropTable('transporte_usuario');
 }
