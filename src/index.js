@@ -1,8 +1,11 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
+
 import express from 'express';
+import validator from 'express-validator';
 import cors from 'cors';
 import db from './models/index.js';
+import router from './routes.js';
 
 const server = express();
 
@@ -10,10 +13,13 @@ const port = 3000;
 
 server.use(cors());
 server.use(express.json());
+//server.use(validator());
 
-db.sequelize.sync()
+db.sequelize.sync();
 
-server.get('/', async (req, res) => {
+server.use('/api', router);
+
+/* server.get('/', async (req, res) => {
     const teste = await db.Usuario.findByPk(1, { include: db.Transporte }).then(resp => {
         console.log(resp.dataValues)
     }).catch(err => console.log(err))
@@ -41,7 +47,7 @@ server.get('/cria', async (req, res) => {
     
     res.send('criado')
 })
-
+ */
 
 server.listen(port, () => {
     console.log('ONLINE! RODANDO NA PORTA ' + port);
