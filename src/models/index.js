@@ -24,6 +24,8 @@ for (var file of files) {
   db[model.default.name] = model.default(sequelize, DataTypes);
 };
 
+for (var name in db) { if (db[name].assoc) db[name].assoc(db); };
+
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 export default db;

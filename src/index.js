@@ -14,7 +14,7 @@ server.use(express.json());
 db.sequelize.sync()
 
 server.get('/', async (req, res) => {
-    const teste = await db.Usuario.findByPk(1).then(resp => {
+    const teste = await db.Usuario.findByPk(1, { include: db.Transporte }).then(resp => {
         console.log(resp.dataValues)
     }).catch(err => console.log(err))
     //console.log(teste)
@@ -28,6 +28,13 @@ server.get('/cria', async (req, res) => {
         senha: '123s',
         pix: '1231231231',
         saldo: 0.1
+    }).then(resp => {
+        console.log(resp)
+    }).catch(err => console.log(err))
+
+    await db.Transporte.create({
+        id_usuario: 1,
+        qtd_lugares: 5
     }).then(resp => {
         console.log(resp)
     }).catch(err => console.log(err))

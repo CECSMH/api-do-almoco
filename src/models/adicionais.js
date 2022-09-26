@@ -1,5 +1,6 @@
-const Grupos = (sequelize, DataTypes) => {
-    const Model = sequelize.define('grupos', {
+const Adicionais = (sequelize, DataTypes) => {
+
+    const Model = sequelize.define('adicionais', {
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
@@ -10,21 +11,25 @@ const Grupos = (sequelize, DataTypes) => {
             type: DataTypes.STRING(150),
             allowNull: false
         },
-        lider_id: {
+        id_usuario: {
             type: DataTypes.INTEGER,
             allowNull: false
         },
-        taxa_motorista_pp: {
+        preco: {
             type: DataTypes.DECIMAL,
+            allowNull: true
+        },
+        vlr_pago: {
+            type: DataTypes.DECIMAL,
+            allowNull: true
+        },
+        pago_por: {
+            type: DataTypes.STRING(3),
             allowNull: true
         }
     });
 
-    Model.assoc = (db) => {
-        Model.belongsTo(db.Usuario, { foreignkey: 'lider_id', targetKey: 'id' });
-    };
-
     return Model;
 };
 
-export default Grupos;
+export default Adicionais;
