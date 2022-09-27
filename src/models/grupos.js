@@ -17,6 +17,10 @@ const Grupos = (sequelize, DataTypes) => {
         taxa_motorista_pp: {
             type: DataTypes.DECIMAL,
             allowNull: true
+        },
+        vlr_almoco_pp: {
+            type: DataTypes.DECIMAL,
+            allowNull: true
         }
     });
 

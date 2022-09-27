@@ -2,8 +2,6 @@ import bcrypt from 'bcryptjs';
 import db from '../models/index.js';
 
 export default new class UserController {
-
-
     async create(req, res) {
 
         const usuario = {}, salt = bcrypt.genSaltSync();
