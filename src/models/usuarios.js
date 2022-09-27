@@ -12,7 +12,8 @@ const Usuario = (sequelize, DataTypes) => {
         },
         email: {
             type: DataTypes.STRING(150),
-            allowNull: false
+            allowNull: false,
+            unique: true
         },
         senha: {
             type: DataTypes.STRING,
@@ -20,11 +21,13 @@ const Usuario = (sequelize, DataTypes) => {
         },
         pix: {
             type: DataTypes.STRING(200),
-            allowNull: true
+            allowNull: true,
+            defaultValue: ''
         },
         saldo: {
             type: DataTypes.DECIMAL,
-            allowNull: 0
+            allowNull: true,
+            defaultValue: 0
         }
     });
 
