@@ -6,9 +6,9 @@ export default function GrupoRules(rule) {
         case 'create_grupo':
             return [
                 body('nome', 'O nome do grupo é obrigatório!').exists(),
-                body('lider_id', 'O lider do grupo é necessário!').exists(),
+                body('nome', 'O nome deve ter entre 3 e 80 caracteres!').isLength({min: 3, max: 80}),
             ];
         default:
             break;
-    }
-}
+    };
+};
