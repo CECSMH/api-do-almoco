@@ -5,12 +5,14 @@ import UserController from "./controller/UserController.js";
 import UserRules from "./middlewares/UserRules.js";
 import Checker from "./middlewares/Checker.js";
 import AuthController from "./controller/AuthController.js";
+import AuthRules from "./middlewares/AuthRules.js";
+import IsLogged from "./middlewares/IsLogged.js";
 
 const router = Router();
 
-router.post('/login', AuthController.login);
+router.post('/login', AuthRules(), Checker, AuthController.login);
 
-router.post('/usuario/criar', UserRules('create_user'), Checker, UserController.create);
+router.post('/usuario/criar', IsLogged, UserRules('create_user'), Checker, UserController.create);
 
 router.get('/', (req, res) => res.send('to aqui'))
 
