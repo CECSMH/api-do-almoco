@@ -21,6 +21,7 @@ const files = readdirSync(__dirname).filter(file => (file.indexOf('.') !== 0) &&
 
 for (var file of files) {
   const model = await import('./' + file);
+  if (!model.default) continue;
   db[model.default.name] = model.default(sequelize, DataTypes);
 };
 

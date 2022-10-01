@@ -10,6 +10,10 @@ const Almoco = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: false
         },
+        grupo_id: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
         dt_inicio: {
             type: DataTypes.DATE,
             allowNull: true

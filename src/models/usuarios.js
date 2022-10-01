@@ -28,6 +28,10 @@ const Usuario = (sequelize, DataTypes) => {
             type: DataTypes.DECIMAL,
             allowNull: true,
             defaultValue: 0
+        },
+        mac: {
+            type: DataTypes.STRING(30),
+            allowNull: true
         }
     });
 

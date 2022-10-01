@@ -6,6 +6,10 @@ const Transporte = (sequelize, DataTypes) => {
             allowNull: false,
             primaryKey: true
         },
+        nome: {
+            type: DataTypes.STRING(150),
+            allowNull: false
+        },
         id_usuario: {
             type: DataTypes.INTEGER,
             allowNull: false
@@ -21,6 +25,6 @@ const Transporte = (sequelize, DataTypes) => {
     };
 
     return Model;
-}
+} 
 
 export default Transporte;
