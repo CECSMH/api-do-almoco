@@ -1,4 +1,4 @@
-const Extrato = (sequelize, DataTypes) => {
+const Pagamento = (sequelize, DataTypes) => {
     const Model = sequelize.define('extrato', {
         id: {
             type: DataTypes.INTEGER,
@@ -42,4 +42,4 @@ const Extrato = (sequelize, DataTypes) => {
 }
 
 
-export default Extrato;
+export default Pagamento;

@@ -12,7 +12,8 @@ const Grupos = (sequelize, DataTypes) => {
         },
         lider_id: {
             type: DataTypes.INTEGER,
-            allowNull: false
+            allowNull: false,
+            unique: true
         },
         taxa_motorista_pp: {
             type: DataTypes.DECIMAL,
