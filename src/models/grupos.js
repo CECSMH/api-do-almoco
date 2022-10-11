@@ -27,6 +27,7 @@ const Grupos = (sequelize, DataTypes) => {
 
     Model.assoc = (db) => {
         Model.belongsTo(db.Usuario, { foreignkey: 'lider_id', targetKey: 'id' });
+        Model.belongsToMany(db.Usuario, { through: db.UsuarioGrupo });
     };
 
     return Model;

@@ -22,7 +22,15 @@ export default new class GrupoController {
         await db.Grupos.create(grupo).then(re => success(re)).catch(err => exception(err));
     }
 
-    async add_member(req, res){
+    async add_member(req, res) {
 
+        const success =async (data) => {
+
+            await data.addUsuario(1).then(teste => res.json(teste))
+
+            //return res.status(200).json({ status: 'success', data });
+        };
+
+        await db.Grupos.findOne({ where: { lider_id: req.user.id } }).then(success).catch(err => console.log(err))
     }
 }
