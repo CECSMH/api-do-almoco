@@ -32,6 +32,11 @@ const Usuario = (sequelize, DataTypes) => {
         mac: {
             type: DataTypes.STRING(30),
             allowNull: true
+        },
+        admin: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+            allowNull: false
         }
     });
 

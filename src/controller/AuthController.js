@@ -26,7 +26,7 @@ export default new class AuthController {
             return res.status(200).json({ status: 'sucess', user, token });
         }
 
-        const exception = err => {
+        const exception = err => { console.log(err)
             return res.status(500).json({ status: 'internal server error', msg: 'Ocorreu um erro no servidor!' });
         }
 

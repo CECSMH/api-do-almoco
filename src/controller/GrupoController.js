@@ -24,13 +24,29 @@ export default new class GrupoController {
 
     async add_member(req, res) {
 
-        const success =async (data) => {
-
-            await data.addUsuario(1).then(teste => res.json(teste))
-
-            //return res.status(200).json({ status: 'success', data });
+        const exception = (err) => {
+            console.log(err.message)
+            return res.status(500).json({ status: 'internal server error', msg: 'Ocorreu um erro ao registrar usuário!' });
         };
 
-        await db.Grupos.findOne({ where: { lider_id: req.user.id } }).then(success).catch(err => console.log(err))
-    }
-}
+        const addMember = async (data) => {
+            await data.addUsuario(req.body.user_id).then(() => {
+                return res.status(200).json({ status: 'success', msg: 'Usuário adicionado com sucesso!' });
+            });
+        };
+
+        const success = async (data) => {
+            await db.Usuario.findOne({
+                include: { model: db.Grupos, as: 'grupos', required: true },
+                where: { id: req.body.user_id }
+            }).then((re) => {
+
+                if (!re) addMember(data);
+                else return res.status(200).json({ status: 'already exists', msg: 'Usuário já está neste grupo!' });
+
+            }).catch(exception);
+        };
+
+        await db.Grupos.findOne({ where: { lider_id: req.user.id } }).then(success).catch(exception);
+    };
+};

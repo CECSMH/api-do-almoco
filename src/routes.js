@@ -14,10 +14,10 @@ const router = Router();
 
 router.post('/login', AuthRules(), Checker, AuthController.login);
 
-router.post('/usuario/criar', IsLogged, UserRules('create_user'), Checker, UserController.create);
+router.post('/usuario/criar', UserRules('create_user'), Checker, UserController.create);
 
 router.post('/grupo/criar', IsLogged, GrupoRules('create_grupo'), Checker, GrupoController.create);
-router.put('/grupo/adicionar', IsLogged, GrupoController.add_member);
+router.put('/grupo/adicionar', IsLogged, GrupoRules('add_member'), Checker, GrupoController.add_member);
 
 router.get('/', (req, res) => res.send('to aqui'))
 
