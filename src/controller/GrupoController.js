@@ -49,4 +49,18 @@ export default new class GrupoController {
 
         await db.Grupos.findOne({ where: { lider_id: req.user.id } }).then(success).catch(exception);
     };
+
+
+    async getAll(req, res) {
+        await db.Grupos.findAll({
+            include: { model: db.Usuario, as: 'usuario'},
+          // where: {usuarioId: req.user.id}
+        }).then((re) => {
+            res.json(re)
+        })
+
+        /* select * from usuarios
+inner join usuario_grupos on usuario_grupos."usuarioId" = usuarios.id
+where "grupoId" = 1 */
+    };
 };

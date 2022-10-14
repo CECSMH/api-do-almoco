@@ -18,6 +18,7 @@ router.post('/usuario/criar', UserRules('create_user'), Checker, UserController.
 
 router.post('/grupo/criar', IsLogged, GrupoRules('create_grupo'), Checker, GrupoController.create);
 router.put('/grupo/adicionar', IsLogged, GrupoRules('add_member'), Checker, GrupoController.add_member);
+router.get('/grupo/todos', IsLogged, GrupoController.getAll)
 
 router.get('/', (req, res) => res.send('to aqui'))
 
