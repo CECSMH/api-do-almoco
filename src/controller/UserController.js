@@ -20,7 +20,7 @@ export default new class UserController {
         const success = ({ pix, saldo, id, nome, email }) => {
             return res.status(200).json({ status: 'success', data: { pix, saldo, id, nome, email } });
         };
-
+        
         await db.Usuario.create(usuario).then(re => success(re)).catch(err => exception(err));
     };
 }

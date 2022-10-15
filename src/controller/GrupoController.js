@@ -12,8 +12,10 @@ export default new class GrupoController {
             return res.status(500).json({ status: 'internal server error', msg: 'Ocorreu um erro ao registrar usuário!' });
         };
 
-        const success = (data) => {
-            return res.status(200).json({ status: 'success', data });
+        const success = async (data) => {
+            await data.addUsuario(req.body.user_id).then(() => {
+                return res.status(200).json({ status: 'success', data });
+            });
         };
 
         await db.Grupos.findOne({ where: { lider_id: req.user.id } }).then(async re => {

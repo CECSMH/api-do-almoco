@@ -35,7 +35,7 @@ const Pagamento = (sequelize, DataTypes) => {
     Model.assoc = (db) => {
         Model.belongsTo(db.Usuario, { foreignkey: 'usuario_id', targetKey: 'id' });
         Model.belongsTo(db.Grupos, { foreignkey: 'grupo_id', targetKey: 'id' });
-        Model.belongsTo(db.Almoco, { foreignkey: 'almoco_id', targetKey: 'id' });
+        Model.belongsTo(db.Refeicao, { foreignkey: 'almoco_id', targetKey: 'id' });
     };
 
     return Model;
