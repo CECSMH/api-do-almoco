@@ -9,9 +9,6 @@ export default new class GrupoController {
         grupo.lider_id = req.user.id;
 
         const exception = (err) => {
-            if (err.name === 'SequelizeUniqueConstraintError') {
-                return res.status(400).json({ status: 'bad request', msg: 'Você já possui um grupo.' });
-            };
             return res.status(500).json({ status: 'internal server error', msg: 'Ocorreu um erro ao registrar usuário!' });
         };
 
@@ -19,13 +16,15 @@ export default new class GrupoController {
             return res.status(200).json({ status: 'success', data });
         };
 
-        await db.Grupos.create(grupo).then(re => success(re)).catch(err => exception(err));
-    }
+        await db.Grupos.findOne({ where: { lider_id: req.user.id } }).then(async re => {
+            if (!re) return await db.Grupos.create(grupo).then(re => success(re)).catch(err => exception(err));
+            else return res.status(400).json({ status: 'bad request', msg: 'Você já possui um grupo.' });
+        }).catch(exception);
+    };
 
     async add_member(req, res) {
 
         const exception = (err) => {
-            console.log(err.message)
             return res.status(500).json({ status: 'internal server error', msg: 'Ocorreu um erro ao registrar usuário!' });
         };
 
@@ -51,16 +50,27 @@ export default new class GrupoController {
     };
 
 
-    async getAll(req, res) {
-        await db.Grupos.findAll({
-            include: { model: db.Usuario, as: 'usuario'},
-          // where: {usuarioId: req.user.id}
-        }).then((re) => {
-            res.json(re)
-        })
+    async get_members(req, res) {
 
-        /* select * from usuarios
-inner join usuario_grupos on usuario_grupos."usuarioId" = usuarios.id
-where "grupoId" = 1 */
+        const [result, metadata] = await db.sequelize.query(`
+        select usuarios.id, usuarios.nome from usuarios
+        inner join usuario_grupos on usuario_grupos."usuarioId" = usuarios.id
+        where "grupoId" = ${req.params.id}`);
+
+        return res.status(200).json({ status: 'success', data: result });
+    };
+
+
+    async getAll(req, res) {
+
+        const exception = (err) => {
+            return res.status(500).json({ status: 'internal server error', msg: 'Ocorreu um erro ao registrar usuário!' });
+        };
+
+        const success = (data) => {
+            return res.status(200).json({ status: 'success', data });
+        };
+
+        await db.Grupos.findAll({ attributes: ['id', 'nome'] }).then(success).catch(exception);
     };
 };

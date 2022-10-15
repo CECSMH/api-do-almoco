@@ -1,5 +1,5 @@
 import validator from 'express-validator'
-const { body } = validator
+const { body, param } = validator
 
 export default function GrupoRules(rule) {
     switch (rule) {
@@ -12,6 +12,12 @@ export default function GrupoRules(rule) {
             return [
                 body('user_id', 'O id do usuário é obrigatório!').exists(),
                 body('user_id', 'O id deve ser inteiro!').isInt()
+            ];
+        case 'get_members': 
+            return [
+              param('id', 'O id do grupo é obrigatório!').exists(),
+              param('id', 'O id do grupo deve ser inteiro!').isInt(),
+
             ];
         default:
             break;
