@@ -6,7 +6,7 @@ export default new class GrupoController {
         const grupo = {};
 
         grupo.nome = req.body.nome;
-        grupo.lider_id = req.user.id;
+        grupo.usuarioId = req.user.id;
 
         const exception = (err) => {
             return res.status(500).json({ status: 'internal server error', msg: 'Ocorreu um erro ao registrar usuário!' });
@@ -18,7 +18,7 @@ export default new class GrupoController {
             });
         };
 
-        await db.Grupos.findOne({ where: { lider_id: req.user.id } }).then(async re => {
+        await db.Grupos.findOne({ where: { usuarioId: req.user.id } }).then(async re => {
             if (!re) return await db.Grupos.create(grupo).then(re => success(re)).catch(err => exception(err));
             else return res.status(400).json({ status: 'bad request', msg: 'Você já possui um grupo.' });
         }).catch(exception);
@@ -33,22 +33,25 @@ export default new class GrupoController {
         const addMember = async (data) => {
             await data.addUsuario(req.body.user_id).then(() => {
                 return res.status(200).json({ status: 'success', msg: 'Usuário adicionado com sucesso!' });
-            });
+            }).catch(exception);
         };
 
         const success = async (data) => {
-            await db.Usuario.findOne({
-                include: { model: db.Grupos, as: 'grupos', required: true },
-                where: { id: req.body.user_id }
-            }).then((re) => {
 
-                if (!re) addMember(data);
+            if (!data) return res.status(400).json({ status: 'bad request', msg: 'Você não possui um grupo!' });
+
+            await db.Usuario.findOne({ include: { model: db.Grupos, as: 'grupos' }, where: { id: req.body.user_id } }).then((re) => {
+
+                if (!re) res.status(400).json({ status: 'bad request', msg: 'Usuário não existe!' });
+
+                else if (!re?.grupos?.find(el => el.usuarioId === req.user.id)) addMember(data);
+
                 else return res.status(200).json({ status: 'already exists', msg: 'Usuário já está neste grupo!' });
 
             }).catch(exception);
         };
 
-        await db.Grupos.findOne({ where: { lider_id: req.user.id } }).then(success).catch(exception);
+        await db.Grupos.findOne({ where: { usuarioId: req.user.id } }).then(success).catch(exception);
     };
 
 
