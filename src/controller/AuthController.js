@@ -24,11 +24,11 @@ export default new class AuthController {
             };
 
             return res.status(200).json({ status: 'sucess', user, token });
-        }
+        };
 
-        const exception = err => { console.log(err)
-            return res.status(500).json({ status: 'internal server error', msg: 'Ocorreu um erro no servidor!' });
-        }
+        const exception = err => {
+            return res.status(500).json({ status: 'internal server error', msg: 'Ocorreu um erro interno no servidor!' });
+        };
 
         await db.Usuario.findOne({ where: { email: req.body.email } }).then(success).catch(exception);
     };
