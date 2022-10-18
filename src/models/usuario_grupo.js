@@ -5,6 +5,11 @@ const UsuarioGrupo = (sequelize, DataTypes) => {
             autoIncrement: true,
             allowNull: false,
             primaryKey: true
+        },
+        status: {
+            type: DataTypes.STRING(2),
+            allowNull: false,
+            defaultValue: 'PD'
         }
     });
 

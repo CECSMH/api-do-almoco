@@ -9,11 +9,11 @@ export default new class GrupoController {
         grupo.usuarioId = req.user.id;
 
         const exception = (err) => {
-            return res.status(500).json({ status: 'internal server error', msg: 'Ocorreu um erro ao registrar usuário!' });
+            return res.status(500).json({ status: 'internal server error', msg: 'Ocorreu um erro interno no servidor!' });
         };
 
         const success = async (data) => {
-            await data.addUsuario(req.body.user_id).then(() => {
+            await data.addUsuario(req.user.id).then(() => {
                 return res.status(200).json({ status: 'success', data });
             });
         };
@@ -27,26 +27,31 @@ export default new class GrupoController {
     async add_member(req, res) {
 
         const exception = (err) => {
-            return res.status(500).json({ status: 'internal server error', msg: 'Ocorreu um erro ao registrar usuário!' });
+            return res.status(500).json({ status: 'internal server error', msg: 'Ocorreu um erro interno no servidor!' });
         };
 
         const addMember = async (data) => {
-            await data.addUsuario(req.body.user_id).then(() => {
+
+            const [result, created] = await db.UsuarioGrupo.findOrCreate({ where: { usuarioId: req.body.user_id, grupoId: data.id } })
+
+            if (created || result.status == 'PD') {
+
+                result.update({ status: 'ST' });
+
                 return res.status(200).json({ status: 'success', msg: 'Usuário adicionado com sucesso!' });
-            }).catch(exception);
+
+            } else return res.status(200).json({ status: 'already exists', msg: 'Usuário já está neste grupo!' });
         };
 
         const success = async (data) => {
 
             if (!data) return res.status(400).json({ status: 'bad request', msg: 'Você não possui um grupo!' });
 
-            await db.Usuario.findOne({ include: { model: db.Grupos, as: 'grupos' }, where: { id: req.body.user_id } }).then((re) => {
+            await db.Usuario.findOne({ where: { id: req.body.user_id } }).then((re) => {
 
-                if (!re) res.status(400).json({ status: 'bad request', msg: 'Usuário não existe!' });
+                if (!re) return res.status(400).json({ status: 'bad request', msg: 'Usuário não existe!' });
 
-                else if (!re?.grupos?.find(el => el.usuarioId === req.user.id)) addMember(data);
-
-                else return res.status(200).json({ status: 'already exists', msg: 'Usuário já está neste grupo!' });
+                else return addMember(data);
 
             }).catch(exception);
         };
@@ -58,9 +63,9 @@ export default new class GrupoController {
     async get_members(req, res) {
 
         const [result, metadata] = await db.sequelize.query(`
-        select usuarios.id, usuarios.nome from usuarios
-        inner join usuario_grupos on usuario_grupos."usuarioId" = usuarios.id
-        where "grupoId" = ${req.params.id}`);
+            select usuarios.id, usuarios.nome from usuarios
+            inner join usuario_grupos on usuario_grupos."usuarioId" = usuarios.id
+            where "grupoId" = ${req.params.id} and usuario_grupos.status = 'ST'`);
 
         return res.status(200).json({ status: 'success', data: result });
     };
@@ -69,7 +74,7 @@ export default new class GrupoController {
     async getAll(req, res) {
 
         const exception = (err) => {
-            return res.status(500).json({ status: 'internal server error', msg: 'Ocorreu um erro ao registrar usuário!' });
+            return res.status(500).json({ status: 'internal server error', msg: 'Ocorreu um erro interno no servidor!' });
         };
 
         const success = (data) => {
@@ -77,5 +82,47 @@ export default new class GrupoController {
         };
 
         await db.Grupos.findAll({ attributes: ['id', 'nome'] }).then(success).catch(exception);
+    };
+
+
+    async request_enter(req, res) {
+
+        const exception = (err) => {
+            return res.status(500).json({ status: 'internal server error', msg: 'Ocorreu um erro interno no servidor!' });
+        };
+
+        const success = async (data) => {
+            if (!data) return res.status(400).json({ status: 'bad request', msg: 'Grupo não existe!' });
+
+            const [result, created] = await db.UsuarioGrupo.findOrCreate({ where: { usuarioId: req.user.id, grupoId: data.id } });
+
+            if (created) return res.status(201).json({ status: 'success', msg: 'Solicitação criada com sucesso!' });
+
+            if (result.status == 'ST') return res.status(200).json({ status: 'success', msg: 'Você já está neste grupo!' });
+
+            if (result.status == 'PD') return res.status(200).json({ status: 'success', msg: 'Você já possui uma solicitação pendente para este grupo!' });
+        };
+
+        await db.Grupos.findByPk(req.body.grupo_id).then(success).catch(exception);
+    };
+
+
+    async get_all_requests(req, res) {
+        const exception = (err) => {
+            return res.status(500).json({ status: 'internal server error', msg: 'Ocorreu um erro ao registrar usuário!' });
+        };
+
+        const success = async (data) => {
+            if (!data) return res.status(400).json({ status: 'bad request', msg: 'Você não possui um grupo!' });
+
+            const [result, metadata] = await db.sequelize.query(`
+                select usuarios.id, usuarios.nome from usuarios
+                inner join usuario_grupos on usuario_grupos."usuarioId" = usuarios.id
+                where "grupoId" = ${data.id} and usuario_grupos.status = 'PD'`);
+
+            return res.status(200).json({ status: 'success', data: result });
+        };
+
+        await db.Grupos.findOne({ where: { usuarioId: req.user.id } }).then(success).catch(exception);
     };
 };

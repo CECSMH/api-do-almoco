@@ -12,7 +12,7 @@ const port = 3000;
 server.use(cors());
 server.use(express.json());
 
-db.sequelize.sync();
+db.sequelize.sync({});
 
 server.use('/api', router);
 
