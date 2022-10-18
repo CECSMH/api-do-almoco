@@ -1,5 +1,5 @@
-const Transporte = (sequelize, DataTypes) => {
-    const Model = sequelize.define('transporte', {
+const Veiculo = (sequelize, DataTypes) => {
+    const Model = sequelize.define('veiculo', {
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
@@ -10,13 +10,19 @@ const Transporte = (sequelize, DataTypes) => {
             type: DataTypes.STRING(150),
             allowNull: false
         },
-        id_usuario: {
-            type: DataTypes.INTEGER,
-            allowNull: false
+        taxa_por_ocupante: {
+            type: DataTypes.DECIMAL,
+            allowNull: true,
+            defaultValue: 0
         },
         qtd_lugares: {
             type: DataTypes.INTEGER,
             allowNull: true
+        },
+        isDefault: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false
         }
     });
 
@@ -25,6 +31,6 @@ const Transporte = (sequelize, DataTypes) => {
     };
 
     return Model;
-} 
+}
 
-export default Transporte;
+export default Veiculo;

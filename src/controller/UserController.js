@@ -21,6 +21,10 @@ export default new class UserController {
             return res.status(200).json({ status: 'success', data: { pix, saldo, id, nome, email } });
         };
         
-        await db.Usuario.create(usuario).then(re => success(re)).catch(err => exception(err));
+        await db.Usuario.create(usuario).then(success).catch(exception);
     };
-}
+
+    async update(req, res){
+
+    };
+};

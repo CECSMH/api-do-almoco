@@ -13,16 +13,17 @@ export default new class GrupoController {
         };
 
         const success = async (data) => {
-            await data.addUsuario(req.user.id).then(() => {
+            await db.UsuarioGrupo.create({ usuarioId: req.user.id, grupoId: data.id, status: 'ST' }).then(() => {
                 return res.status(200).json({ status: 'success', data });
-            });
+            }).catch(exception);
         };
 
-        await db.Grupos.findOne({ where: { usuarioId: req.user.id } }).then(async re => {
+        await db.Grupos.findOne({ where: { usuarioId: req.user.id }, attributes: ['id'] }).then(async re => {
             if (!re) return await db.Grupos.create(grupo).then(re => success(re)).catch(err => exception(err));
             else return res.status(400).json({ status: 'bad request', msg: 'Você já possui um grupo.' });
         }).catch(exception);
     };
+
 
     async add_member(req, res) {
 

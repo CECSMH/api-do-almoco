@@ -41,9 +41,9 @@ const Usuario = (sequelize, DataTypes) => {
     });
 
     Model.assoc = (db) => {
-        Model.hasOne(db.Transporte, { foreignKey: 'id_usuario' });
-        Model.hasOne(db.Refeicao, { foreignKey: 'criador_id' });
-        Model.hasOne(db.Grupos, { foreignKey: 'lider_id' });
+        Model.hasOne(db.Veiculo);
+        Model.hasOne(db.Refeicao);
+        Model.hasOne(db.Grupos);
         Model.belongsToMany(db.Grupos, { through: db.UsuarioGrupo });
     };
 

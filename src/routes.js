@@ -11,12 +11,18 @@ import GrupoRules from "./middlewares/GrupoRules.js";
 import GrupoController from "./controller/GrupoController.js";
 import RefeicaoController from "./controller/RefeicaoController.js";
 import RefeicaoRules from "./middlewares/RefeicaoRules.js";
+import VeiculoController from "./controller/VeiculoController.js";
+import VeiculoRules from "./middlewares/VeiculoRules.js";
 
 const router = Router();
 
 router.post('/login', AuthRules(), Checker, AuthController.login);
 
 router.post('/usuario/criar', UserRules('create_user'), Checker, UserController.create);
+router.put('/usuario/editar', UserRules('edit_user'), Checker, UserController.update);
+
+router.post('/veiculo/criar', IsLogged, VeiculoRules('create'), Checker, VeiculoController.create);
+router.get('/veiculo/todos', IsLogged, VeiculoController.getAll);
 
 router.post('/grupo/criar', IsLogged, GrupoRules('create_grupo'), Checker, GrupoController.create);
 router.put('/grupo/adicionar', IsLogged, GrupoRules('add_member'), Checker, GrupoController.add_member);
