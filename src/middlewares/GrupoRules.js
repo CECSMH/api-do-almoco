@@ -23,6 +23,11 @@ export default function GrupoRules(rule) {
                 body('grupo_id', 'O id do grupo é obrigatório!').exists(),
                 body('grupo_id', 'O id do grupo deve ser inteiro!').isInt(),
             ];
+        case 'update_grupo':
+            return [
+                body('vlr_almoco_default', 'O valor padrão do almoço deve ser numerico!').optional().isNumeric(),
+                body('nome', 'O nome deve ter entre 3 e 80 caracteres!').optional().isLength({ min: 3, max: 80 })
+            ];
         default:
             break;
     };

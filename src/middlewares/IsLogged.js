@@ -21,7 +21,7 @@ export default function IsLogged(req, res, next) {
         if (decoded) {
             let user;
 
-            await db.Usuario.findByPk(decoded.id, {attributes: { exclude: ['senha'] }}).then(re => user = re).catch(err => { return });
+            await db.Usuario.findByPk(decoded.id).then(re => user = re).catch(err => { return });
 
             if(user){
                 req.user = user;

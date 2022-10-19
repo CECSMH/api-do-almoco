@@ -1,4 +1,5 @@
 import db from "../models/index.js";
+import { foreach } from "../utils/utils.js";
 
 export default new class GrupoController {
 
@@ -22,6 +23,27 @@ export default new class GrupoController {
             if (!re) return await db.Grupos.create(grupo).then(re => success(re)).catch(err => exception(err));
             else return res.status(400).json({ status: 'bad request', msg: 'Você já possui um grupo.' });
         }).catch(exception);
+    };
+
+
+    async update(req, res){
+        const grupo = {};
+
+        foreach(['nome', 'vlr_almoco_default'], e => req.body[e] && (grupo[e] = req.body[e]));
+
+        const exception = (err) => {
+            return res.status(500).json({ status: 'internal server error', msg: 'Ocorreu um erro interno no servidor!' });
+        };
+
+        const success = async (re) => {
+            if(!re) return res.status(400).json({status: 'bad resquest', msg: 'Você não possui um grupo para editar!'});
+
+            await re.update(grupo).then(data => {
+                return res.status(200).json({ status: 'success', data });
+            }).catch(exception);
+        };
+
+        await db.Grupos.findOne({where: {usuarioId: req.user.id}}).then(success).catch(exception);
     };
 
 
