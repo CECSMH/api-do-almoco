@@ -38,6 +38,8 @@ router.get('/grupo/requisicoes', IsLogged, GrupoController.get_all_requests);
 
 router.post('/refeicao/criar', IsLogged, RefeicaoRules('create'), Checker, RefeicaoController.create);
 router.get('/refeicao/todos/:id', IsLogged, RefeicaoController.getAll);
+router.put('/refeicao/entrar', IsLogged, RefeicaoRules('add_part'), Checker, RefeicaoController.add_participant);
+router.get('/refeicao/participantes/:id', IsLogged, RefeicaoRules('get_parts'), Checker, RefeicaoController.get_all_participants);
 
 router.get('/', (req, res) => res.send('to aqui'))
 

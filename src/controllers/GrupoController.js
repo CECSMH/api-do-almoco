@@ -26,7 +26,7 @@ export default new class GrupoController {
     };
 
 
-    async update(req, res){
+    async update(req, res) {
         const grupo = {};
 
         foreach(['nome', 'vlr_almoco_default'], e => req.body[e] && (grupo[e] = req.body[e]));
@@ -36,14 +36,14 @@ export default new class GrupoController {
         };
 
         const success = async (re) => {
-            if(!re) return res.status(400).json({status: 'bad resquest', msg: 'Você não possui um grupo para editar!'});
+            if (!re) return res.status(400).json({ status: 'bad resquest', msg: 'Você não possui um grupo para editar!' });
 
             await re.update(grupo).then(data => {
                 return res.status(200).json({ status: 'success', data });
             }).catch(exception);
         };
 
-        await db.Grupos.findOne({where: {usuarioId: req.user.id}}).then(success).catch(exception);
+        await db.Grupos.findOne({ where: { usuarioId: req.user.id } }).then(success).catch(exception);
     };
 
 
@@ -84,13 +84,18 @@ export default new class GrupoController {
 
 
     async get_members(req, res) {
+        try {
 
-        const [result, metadata] = await db.sequelize.query(`
+            const [result, metadata] = await db.sequelize.query(`
             select usuarios.id, usuarios.nome from usuarios
             inner join usuario_grupos on usuario_grupos."usuarioId" = usuarios.id
             where "grupoId" = ${req.params.id} and usuario_grupos.status = 'ST'`);
 
-        return res.status(200).json({ status: 'success', data: result });
+            return res.status(200).json({ status: 'success', data: result });
+
+        } catch (err) {
+            return res.status(500).json({ status: 'internal server error', msg: 'Ocorreu um erro interno no servidor!' });
+        };
     };
 
 

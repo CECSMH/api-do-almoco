@@ -20,6 +20,7 @@ const Refeicao = (sequelize, DataTypes) => {
     Model.assoc = (db) => {
         Model.belongsTo(db.Usuario);
         Model.belongsTo(db.Grupos);
+        Model.belongsToMany(db.Usuario, { through: db.UsuarioRefeicao});
     };
 
     return Model;

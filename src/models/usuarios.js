@@ -45,6 +45,7 @@ const Usuario = (sequelize, DataTypes) => {
         Model.hasOne(db.Refeicao);
         Model.hasOne(db.Grupos);
         Model.belongsToMany(db.Grupos, { through: db.UsuarioGrupo });
+        Model.belongsToMany(db.Refeicao, { through: db.UsuarioRefeicao});
     };
 
     return Model;
